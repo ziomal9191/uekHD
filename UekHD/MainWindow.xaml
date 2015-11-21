@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Label x:Name="label" Content="Podaj id produktu" HorizontalAlignment="Left" Margin="18,80,0,0" VerticalAlignment="Top" Height="30" Width="116"/>
+        <TextBox x:Name="TextBox" HorizontalAlignment="Left" Height="23" Margin="171,82,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged"/>
+
     </Grid>
 </Window>

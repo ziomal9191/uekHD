@@ -24,5 +24,15 @@ namespace UekHD
         {
             InitializeComponent();
         }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Console.WriteLine("Text box changed ");
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
