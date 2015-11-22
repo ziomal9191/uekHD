@@ -10,8 +10,9 @@ namespace UekHD
     {
         public HttpCommentGeter(string productId)
         {
+            //19299330
             System.Net.WebClient client = new System.Net.WebClient();
-            string downloadString = client.DownloadString("http://www.ceneo.pl/19299330#tab=reviews");
+            string downloadString = client.DownloadString("http://www.ceneo.pl/" + productId + "#tab=reviews");
             ceneoParser.getCommentsContentFromPage(downloadString);
         }
         private ICommentParser ceneoParser = new CeneoCommentParser();

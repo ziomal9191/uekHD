@@ -10,14 +10,24 @@ namespace UekHD
     {
         public string getCommentsContentFromPage(string pageContent)
         {
-            System.IO.File.Create("lala.txt");
+
+            //System.IO.File.Create("lala.txt");
             using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter("./lala.txt"))
             {
-               
-                    outputFile.WriteLine(pageContentx);
 
-                return pageContent;
+                outputFile.WriteLine(pageContent);
+                outputFile.Flush();
+                outputFile.Close();
+
+                
             }
+            
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc.LoadHtml(pageContent);
+
+           
+            return pageContent;
         }
+        
     }
 }

@@ -27,12 +27,16 @@ namespace UekHD
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Console.WriteLine("Text box changed ");
+            System.Diagnostics.Trace.WriteLine("Text box changed ");
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            string textToGetComments = TextBox.GetLineText(0);
+            HttpCommentGeter httpGeter = new HttpCommentGeter(textToGetComments);
 
         }
+        
+            
     }
 }
