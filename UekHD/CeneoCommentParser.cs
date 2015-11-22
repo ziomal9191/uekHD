@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace UekHD
 {
@@ -12,22 +8,43 @@ namespace UekHD
         {
 
             //System.IO.File.Create("lala.txt");
-            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter("./lala.txt"))
+
+
+            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            htmlDoc.LoadHtml(pageContent);
+            if (htmlDoc.ParseErrors != null && htmlDoc.ParseErrors.Count() > 0)
             {
+                throw new System.ExecutionEngineException();
+                // Handle any parse errors as required
 
-                outputFile.WriteLine(pageContent);
-                outputFile.Flush();
-                outputFile.Close();
-
-                
             }
-            
-            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-            doc.LoadHtml(pageContent);
+            else
+            {
+                if (htmlDoc.DocumentNode != null)
+                {
 
-           
+                    HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//p*");// class=\"product - review - body\"");
+                    if (bodyNodes != null)
+                        using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter("./lala.txt"))
+                        {
+
+                            foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
+                            {
+
+                                //outputFile.WriteLine(pageContent);
+                                outputFile.WriteLine(node.InnerHtml);
+                                outputFile.Flush();
+                                outputFile.Close();
+
+
+                            }
+                        }
+                }
+
+
+            }
             return pageContent;
         }
-        
+
     }
 }
