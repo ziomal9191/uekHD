@@ -12,6 +12,7 @@ namespace UekHD
         {
             //19299330
             System.Net.WebClient client = new System.Net.WebClient();
+            //client.Proxy = null;
             string downloadString = client.DownloadString("http://www.ceneo.pl/" + productId + "#tab=reviews");
             ceneoParser.getCommentsContentFromPage(downloadString);
         }

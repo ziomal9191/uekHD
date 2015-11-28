@@ -21,23 +21,27 @@ namespace UekHD
             else
             {
                 if (htmlDoc.DocumentNode != null)
-                {
-
-                    HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//p*");// class=\"product - review - body\"");
+                {////*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol
+                    //                                                                               
+                    HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
                     if (bodyNodes != null)
                         using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter("./lala.txt"))
                         {
-
+                            string text="";
                             foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
                             {
 
                                 //outputFile.WriteLine(pageContent);
-                                outputFile.WriteLine(node.InnerHtml);
-                                outputFile.Flush();
-                                outputFile.Close();
+                                text += node.InnerText; 
+  //                              outputFile.WriteLine(node.ToString());
+  //                              outputFile.Flush();
+  //                              outputFile.Close();
 
 
                             }
+                            outputFile.WriteLine(text);
+                                                          outputFile.Flush();
+                                                          outputFile.Close();
                         }
                 }
 
