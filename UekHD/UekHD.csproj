@@ -68,8 +68,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CeneoCommentParser.cs" />
+    <Compile Include="CeneoProductComment.cs" />
+    <Compile Include="CeneoWebCrawler.cs" />
+    <Compile Include="CommentList.cs" />
     <Compile Include="HttpCommentGeter.cs" />
     <Compile Include="ICommentParser.cs" />
+    <Compile Include="ILinkProvider.cs" />
+    <Compile Include="IProductComment.cs" />
+    <Compile Include="IWebCrawler.cs" />
+    <Compile Include="LinkProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -93,6 +100,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

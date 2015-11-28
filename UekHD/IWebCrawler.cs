@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
-    interface ICommentParser
+    interface IWebCrawler
     {
-        CommentList getCommentsContentFromPage(string pageContent);
+        CommentList getCommentList();
     }
 }

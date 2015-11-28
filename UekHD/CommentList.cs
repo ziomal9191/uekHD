@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
-    interface ICommentParser
+    class CommentList : System.Collections.Generic.List<CeneoProductComment>
     {
-        CommentList getCommentsContentFromPage(string pageContent);
     }
 }
