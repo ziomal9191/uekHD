@@ -1,1 +1,23 @@
-d:\userdata\jwoznicz\my documents\visual studio 2015\Projects\UekHD\UekHD\bin\Debug\UekHD.exe.config
+G:\UekProjekt\UekHD\bin\Debug\UekHD.exe.config
+G:\UekProjekt\UekHD\bin\Debug\UekHD.exe
+G:\UekProjekt\UekHD\bin\Debug\UekHD.pdb
+G:\UekProjekt\UekHD\bin\Debug\EntityFramework.dll
+G:\UekProjekt\UekHD\bin\Debug\EntityFramework.SqlServer.dll
+G:\UekProjekt\UekHD\bin\Debug\EntityFramework.SqlServerCompact.dll
+G:\UekProjekt\UekHD\bin\Debug\HtmlAgilityPack.dll
+G:\UekProjekt\UekHD\bin\Debug\System.Data.SqlServerCe.dll
+G:\UekProjekt\UekHD\bin\Debug\EntityFramework.xml
+G:\UekProjekt\UekHD\bin\Debug\EntityFramework.SqlServer.xml
+G:\UekProjekt\UekHD\bin\Debug\EntityFramework.SqlServerCompact.xml
+G:\UekProjekt\UekHD\bin\Debug\HtmlAgilityPack.pdb
+G:\UekProjekt\UekHD\bin\Debug\HtmlAgilityPack.xml
+G:\UekProjekt\UekHD\obj\Debug\MainWindow.g.cs
+G:\UekProjekt\UekHD\obj\Debug\App.g.cs
+G:\UekProjekt\UekHD\obj\Debug\UekHD_MarkupCompile.cache
+G:\UekProjekt\UekHD\obj\Debug\UekHD_MarkupCompile.lref
+G:\UekProjekt\UekHD\obj\Debug\MainWindow.baml
+G:\UekProjekt\UekHD\obj\Debug\UekHD.g.resources
+G:\UekProjekt\UekHD\obj\Debug\UekHD.Properties.Resources.resources
+G:\UekProjekt\UekHD\obj\Debug\UekHD.csproj.GenerateResource.Cache
+G:\UekProjekt\UekHD\obj\Debug\UekHD.exe
+G:\UekProjekt\UekHD\obj\Debug\UekHD.pdb
