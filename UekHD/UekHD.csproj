@@ -103,6 +103,7 @@
     <Compile Include="CeneoProductComment.cs" />
     <Compile Include="CeneoWebCrawler.cs" />
     <Compile Include="CommentList.cs" />
+    <Compile Include="DatabaseContext.cs" />
     <Compile Include="HttpCommentGeter.cs" />
     <Compile Include="ICommentParser.cs" />
     <Compile Include="ILinkProvider.cs" />

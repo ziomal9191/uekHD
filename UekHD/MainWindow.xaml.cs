@@ -36,7 +36,13 @@ namespace UekHD
             HttpCommentGeter httpGeter = new HttpCommentGeter(textToGetComments);
 
         }
-        
-            
+        //Clearbutton
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            DatabaseContext context = new DatabaseContext();
+            context.Comments.RemoveRange(context.Comments);
+            context.SaveChanges();
+           // IQueryable<CommentDb> productsQuery = from CommentDb in context.Comments;
+        }
     }
 }
