@@ -12,7 +12,7 @@ namespace UekHD
         {
             m_downloadString = downladString;
         }
-        public CommentList getCommentList()
+        public void getCommentList()
         {
             System.Net.WebClient client = new System.Net.WebClient();
             CommentList comments = new CommentList();
@@ -23,7 +23,7 @@ namespace UekHD
                 string pageContent = client.DownloadString(link);
                 comments.AddRange(ceneoParser.getCommentsContentFromPage(pageContent));
             }
-            return comments;
+          
         }
         private ICommentParser ceneoParser = new CeneoCommentParser();
         private string m_downloadString;

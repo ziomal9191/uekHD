@@ -91,6 +91,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="DatabasePresentationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -104,6 +108,9 @@
     <Compile Include="CeneoWebCrawler.cs" />
     <Compile Include="CommentList.cs" />
     <Compile Include="DatabaseContext.cs" />
+    <Compile Include="DatabasePresentationWindow.xaml.cs">
+      <DependentUpon>DatabasePresentationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HttpCommentGeter.cs" />
     <Compile Include="ICommentParser.cs" />
     <Compile Include="ILinkProvider.cs" />

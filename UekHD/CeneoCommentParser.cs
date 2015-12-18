@@ -15,8 +15,18 @@ namespace UekHD
 
             //System.IO.File.Create("lala.txt");
 
+ /*           listOfComments.Add();
+            using (var db = new DatabaseContext())
+            {
+                CommentDb comment = new CommentDb { Comment = node.InnerText };
 
-            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+                db.Comments.Add(comment);
+                db.SaveChanges();
+
+            }
+            text += node.InnerText;*/
+
+            htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageContent);
             string text = "";
             CommentList listOfComments = new CommentList();
@@ -29,41 +39,36 @@ namespace UekHD
             else
             {
                 if (htmlDoc.DocumentNode != null)
-                {////*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol
-                    //                                                                               
-                    HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
-                    if (bodyNodes != null)
-                     //   using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter("C:\\lala.txt", true, System.Text.Encoding.UTF8))
-                     //   {
-                     //       var encoding = new System.Text.UTF8Encoding();
-                            foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
-                            {
-                                listOfComments.Add(new CeneoProductComment(node.InnerText));
-                                using (var db = new DatabaseContext())
-                                {
-                                    CommentDb comment = new CommentDb { Comment= node.InnerText };
+                {
 
-                                    db.Comments.Add(comment);
-                                    db.SaveChanges();
-                                    
+                    //Parsing start
+                    Product product = new Product();
+                    fillComments(product);
+                    using (var db = new DatabaseContext())
+                    {
+                        db.Product.Add(product);
+                        db.SaveChanges();
+                    }
 
-                                    //SqlConnection sc = (SqlConnection)ec.StoreConnection;
-                                    //outputFile.WriteLine(db.Database.Connection.ConnectionString);
-                                }
-                                text += node.InnerText;
-                               
-                            }
-                           
-                       //     outputFile.WriteLine(text);
-                       //     outputFile.Flush();
-                       //     outputFile.Close();
-                        //}
                 }
 
 
             }
             return listOfComments;
         }
-
+        void fillComments(Product product)
+        {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            if (bodyNodes != null)
+                foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
+                {
+                    //HtmlAgilityPack.HtmlNodeCollection bodyNodes1 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"pros-cell\"]");;
+                    
+                    //HtmlAgilityPack.HtmlNodeCollection bodyNodes2 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"review-score-count\"]"); ;
+                    product.Comments.Add(new CommentDb { Comment = node.InnerText });
+                    
+                }
+        }
+        HtmlAgilityPack.HtmlDocument htmlDoc;
     }
 }

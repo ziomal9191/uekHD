@@ -8,6 +8,6 @@ namespace UekHD
 {
     interface IWebCrawler
     {
-        CommentList getCommentList();
+        void getCommentList();
     }
 }
