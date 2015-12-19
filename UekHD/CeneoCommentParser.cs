@@ -13,22 +13,9 @@ namespace UekHD
         public CommentList getCommentsContentFromPage(string pageContent)
         {
 
-            //System.IO.File.Create("lala.txt");
-
- /*           listOfComments.Add();
-            using (var db = new DatabaseContext())
-            {
-                CommentDb comment = new CommentDb { Comment = node.InnerText };
-
-                db.Comments.Add(comment);
-                db.SaveChanges();
-
-            }
-            text += node.InnerText;*/
-
+   
             htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageContent);
-            string text = "";
             CommentList listOfComments = new CommentList();
             if (htmlDoc.ParseErrors != null && htmlDoc.ParseErrors.Count() > 0)
             {
