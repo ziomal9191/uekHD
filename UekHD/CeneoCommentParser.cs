@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Data.Entity.Core.EntityClient;
+using System;
 
 namespace UekHD
 {
@@ -30,7 +31,7 @@ namespace UekHD
 
                     //Parsing start
                     Product product = new Product();
-                    fillComments(product);
+                    fillProductInfo(product);
                     using (var db = new DatabaseContext())
                     {
                         db.Product.Add(product);
@@ -43,6 +44,60 @@ namespace UekHD
             }
             return listOfComments;
         }
+
+        private void fillProductInfo(Product product)
+        {
+            fillComments(product);
+            fillStar(product);
+            fillAdvantages(product);
+            fillDisadvantages(product);
+            fillType(product);
+            fillBrand(product);
+            fillModel(product);
+            fillAdditionalComment(product);
+        }
+
+        private void fillAdditionalComment(Product product)
+        {
+        }
+
+        private void fillModel(Product product)
+        {
+        }
+
+        private void fillBrand(Product product)
+        {
+        }
+
+        private void fillType(Product product)
+        {
+        }
+
+        private void fillDisadvantages(Product product)
+        {
+        }
+
+        private void fillAdvantages(Product product)
+        {
+            
+        }
+
+        private void fillStar(Product product)
+        {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
+                {
+                    //HtmlAgilityPack.HtmlNodeCollection bodyNodes1 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"pros-cell\"]");;
+
+                    //HtmlAgilityPack.HtmlNodeCollection bodyNodes2 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"review-score-count\"]"); ;
+                    product.Comments.Add(new CommentDb { Comment = node.InnerText });
+
+                }
+            }
+        }
+
         void fillComments(Product product)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");

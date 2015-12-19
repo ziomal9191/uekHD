@@ -12,10 +12,10 @@ namespace UekHD
         public Product() { Comments = new List<CommentDb>(); }
         public int ProductId { set; get; }
         public virtual ICollection<CommentDb> Comments { set; get; }
-        public string type { set; get; }
-        public string brand { set; get; }
-        public string model { set; get; }
-        public string additionalComment { set; get;  }
+        public string Type { set; get; }
+        public string Brand { set; get; }
+        public string Model { set; get; }
+        public string AdditionalComment { set; get;  }
 
     }
     public class CommentDb
