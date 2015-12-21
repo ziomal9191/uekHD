@@ -48,15 +48,36 @@ namespace UekHD
         private void fillProductInfo(Product product)
         {
             fillComments(product);
-            fillStar(product);
-            fillAdvantages(product);
-            fillDisadvantages(product);
             fillType(product);
             fillBrand(product);
             fillModel(product);
             fillAdditionalComment(product);
         }
 
+        private void fillComment(CommentDb comment, HtmlAgilityPack.HtmlNode node)
+        {
+
+            fillCommentContent(comment, node);
+            fillStar(comment, node);
+            fillAdvantages(comment, node);
+            fillDisadvantages(comment, node);
+
+        }
+
+        private void fillCommentContent(CommentDb comment, HtmlAgilityPack.HtmlNode node)
+        {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//p[@class=\"product-review-body\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
+                {
+
+                    comment.Comment += commentNode.InnerText;
+                }
+               
+            }
+            
+        }
         private void fillAdditionalComment(Product product)
         {
         }
@@ -73,18 +94,43 @@ namespace UekHD
         {
         }
 
-        private void fillDisadvantages(Product product)
+        private void fillDisadvantages(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
         }
 
-        private void fillAdvantages(Product product)
+        private void fillAdvantages(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
-            
+         //   pros - cell
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes("//span[@class=\"pros-cell\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            if (bodyNodes != null)//[class=\"product-reviews js_product-reviews js_reviews-hook\"]
+            {
+                foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
+                {
+
+           //         comment.Comment = commentNode.InnerText;
+                }
+
+            }
         }
 
-        private void fillStar(Product product)
+        private void fillStar(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes("//span[@class=\"review-score-count\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
+                {
+                    string score = commentNode.InnerText;
+                    string[] scoreCount = score.Split('/');
+                    comment.Stars = Convert.ToDouble(scoreCount[0]);
+                }
+
+            }
+        }
+
+        void fillComments(Product product)
+        {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//ol[@class=\"product-reviews js_product-reviews js_reviews-hook\"]/li");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
             if (bodyNodes != null)
             {
                 foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
@@ -92,24 +138,13 @@ namespace UekHD
                     //HtmlAgilityPack.HtmlNodeCollection bodyNodes1 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"pros-cell\"]");;
 
                     //HtmlAgilityPack.HtmlNodeCollection bodyNodes2 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"review-score-count\"]"); ;
-                    product.Comments.Add(new CommentDb { Comment = node.InnerText });
+                    CommentDb comment = new CommentDb(); //{ Comment = node.InnerText };
+                    fillComment(comment, node);
+                    product.Comments.Add(comment);
 
                 }
             }
-        }
-
-        void fillComments(Product product)
-        {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
-            if (bodyNodes != null)
-                foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
-                {
-                    //HtmlAgilityPack.HtmlNodeCollection bodyNodes1 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"pros-cell\"]");;
-                    
-                    //HtmlAgilityPack.HtmlNodeCollection bodyNodes2 = htmlDoc.DocumentNode.SelectNodes("//*[@class=\"review-score-count\"]"); ;
-                    product.Comments.Add(new CommentDb { Comment = node.InnerText });
-                    
-                }
+            
         }
         HtmlAgilityPack.HtmlDocument htmlDoc;
     }

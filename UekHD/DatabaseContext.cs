@@ -22,7 +22,7 @@ namespace UekHD
     {
         public int CommentDbID { set; get; }
         public string Comment { set; get; }
-        public int Stars { set; get; }
+        public double Stars { set; get; }
         public string Advantages { set; get; }
         public string Disadvantages { set; get; }
 
