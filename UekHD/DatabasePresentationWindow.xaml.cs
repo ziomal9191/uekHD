@@ -54,19 +54,32 @@ namespace UekHD
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /* System.Windows.Data.CollectionViewSource categoryViewSource =
-             ((System.Windows.Data.CollectionViewSource)(this.FindResource("categoryViewSource")));
-             {
-
-                 categoryViewSource.Source = db.Product.Local;
-             }*/
-            // dataGrid.DataContext = new LinqServerModeSource();
             using (DatabaseContext siContext = new DatabaseContext())
             {
-                var query = from p in siContext.Product
-                            select p;
+                var query = (from Product in siContext.Product
+                             select Product.Comments).ToList();
+                //var co = query.Select<CommentDb>();
+                /*  var l = from Product.Comments in query select CommentDb;
+                  List<String> comments;
+                  foreach (CommentDb v in query)
+                  {
+                      comments.Add(v.Comment);
+                  }*/
+                List<CommentDb> comments = new List<CommentDb>();
 
-                dataGrid.ItemsSource = query.ToList();
+                foreach (var comment in query)
+                {
+                    if (comment.Count > 0)
+                    {
+                        foreach (var com in comment)
+                        {
+                            comments.Add(com);
+                        }
+                    }
+                    // comments.Add(from x in siContext.Comments where x.CommentDbID = comment.CommentDbID);
+                }
+                //var l = from CommentDb in query select CommentDb.Comment;
+                dataGrid.ItemsSource = comments.ToList();
             }
         }
     }

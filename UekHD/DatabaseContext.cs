@@ -25,7 +25,11 @@ namespace UekHD
         public double Stars { set; get; }
         public string Advantages { set; get; }
         public string Disadvantages { set; get; }
-
+        public string Author { set; get; }
+        public DateTime Date { set; get; }
+        public bool Recommend { set; get; }
+        public int Usability { set; get; }
+        public int UsabilityVotes { set; get; }
     }
     public class DatabaseContext : DbContext
     {

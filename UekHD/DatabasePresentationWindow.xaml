@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UekHD"
         mc:Ignorable="d"
-        Title="DatabasePresentationWindow" Height="300" Width="300">
+        Title="DatabasePresentationWindow" Height="409.894" Width="949.176">
     <Grid>
-        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="250" SelectionChanged="dataGrid_SelectionChanged" Width="272"/>
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="360" SelectionChanged="dataGrid_SelectionChanged" Width="921"/>
     </Grid>
 </Window>
