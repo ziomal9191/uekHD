@@ -8,6 +8,6 @@ namespace UekHD
 {
     interface ICommentParser
     {
-        CommentList getCommentsContentFromPage(string pageContent);
+        CommentList getCommentsContentFromPage(string pageContent, Product product);
     }
 }

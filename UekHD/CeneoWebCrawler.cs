@@ -15,13 +15,15 @@ namespace UekHD
         public void getCommentList()
         {
             System.Net.WebClient client = new System.Net.WebClient();
+            client.Encoding = Encoding.UTF8;
             CommentList comments = new CommentList();
             ILinkProvider provider = new LinkProvider(m_downloadString);
+            Product product = new Product();
             string link = "";
             while ((link = provider.getLink()) != "")
             { 
                 string pageContent = client.DownloadString(link);
-                comments.AddRange(ceneoParser.getCommentsContentFromPage(pageContent));
+                comments.AddRange(ceneoParser.getCommentsContentFromPage(pageContent, product) );
             }
           
         }

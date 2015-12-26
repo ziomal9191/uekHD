@@ -35,7 +35,5 @@ namespace UekHD
     {
         public DbSet<Product> Product { set; get; }
         public DbSet<CommentDb> Comments { set; get; }
-
-
     }
 }

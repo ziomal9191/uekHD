@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Data.Entity.Core.EntityClient;
 using System;
 using HtmlAgilityPack;
+using System.Windows;
 
 namespace UekHD
 {
@@ -12,7 +13,7 @@ namespace UekHD
    
     class CeneoCommentParser : ICommentParser
     {
-        public CommentList getCommentsContentFromPage(string pageContent)
+        public CommentList getCommentsContentFromPage(string pageContent, Product product)
         {
 
    
@@ -29,9 +30,8 @@ namespace UekHD
             {
                 if (htmlDoc.DocumentNode != null)
                 {
-
                     //Parsing start
-                    Product product = new Product();
+                    //Product product = new Product();
                     fillProductInfo(product);
                     using (var db = new DatabaseContext())
                     {
@@ -40,8 +40,6 @@ namespace UekHD
                     }
 
                 }
-
-
             }
             return listOfComments;
         }
@@ -50,8 +48,7 @@ namespace UekHD
         {
             fillComments(product);
             fillType(product);
-            fillBrand(product);
-            fillModel(product);
+            fillBrandAndModel(product);
             fillAdditionalComment(product);
         }
 
@@ -92,7 +89,6 @@ namespace UekHD
 
         private void fillRecommend(CommentDb comment, HtmlNode node)
         {
-            //product - recommended
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//em[@class=\"product-recommended\"]");
             if (bodyNodes != null)
             {
@@ -150,6 +146,7 @@ namespace UekHD
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
                 {
+                   // MessageBoxResult result = MessageBox.Show(commentNode.InnerText, "Confirmation", MessageBoxButton.OK, MessageBoxImage.Warning);
                     comment.Comment += commentNode.InnerText;
                 }
             }
@@ -160,16 +157,39 @@ namespace UekHD
 
         }
 
-        private void fillModel(Product product)
+        private void fillBrandAndModel(Product product)
         {
-        }
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
+                {
+                    string[] brand = nodeType.InnerHtml.Split(' ');
+                    product.Brand = brand[0];
+                    //get model
+                    string model = "";
+                    for (int i = 1; i < brand.Length; i++)
+                    {
+                        model += brand[i] + " ";
+                    }
+                    product.Model = model;
+                }
+            }
 
-        private void fillBrand(Product product)
-        {
+
         }
 
         private void fillType(Product product)
         {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dd//span[last()]//span");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
+                {
+                    product.Type = nodeType.InnerText;
+                }
+            }
+
         }
 
         private void fillDisadvantages(CommentDb comment, HtmlAgilityPack.HtmlNode node)

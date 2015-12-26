@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace UekHD
 {
@@ -34,36 +25,67 @@ namespace UekHD
         {
             string textToGetComments = TextBox.GetLineText(0);
             HttpCommentGeter httpGeter = new HttpCommentGeter(textToGetComments);
-
         }
 
         private void buttonClearDb(object sender, RoutedEventArgs e)
         {
             DatabaseContext context = new DatabaseContext();
             context.Comments.RemoveRange(context.Comments);
+            context.Product.RemoveRange(context.Product);
             context.SaveChanges();
-           // IQueryable<CommentDb> productsQuery = from CommentDb in context.Comments;
         }
 
-        private void button1_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void button1_Copy_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void button1_Copy1_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
         //Present database
         private void buttonPresentDatabse(object sender, RoutedEventArgs e)
         {
             DatabasePresentationWindow dbWindow = new DatabasePresentationWindow();
             dbWindow.Show();
+        }
+
+        private void buttonExtract(object sender, RoutedEventArgs e)
+        {
+
+            if (!wasTransform && wasLoad && !wasExtract)
+            {
+                wasExtract = true;
+            }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Wrong sequence", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //warning window
+            }
+        }
+        private bool wasExtract=false;
+        private bool wasTransform=false;
+        private bool wasLoad=true;
+
+        private void buttonTransform(object sender, RoutedEventArgs e)
+        {
+            if (!wasTransform && wasLoad && wasExtract)
+            {
+                wasTransform = true;
+            }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Wrong sequence", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //warning window
+            }
+        }
+
+        private void buttonLoad(object sender, RoutedEventArgs e)
+        {
+            if (wasExtract && wasTransform /*&& !wasLoad*/)
+            {
+                wasExtract = false;
+                wasTransform = false;
+               // wasLoad = flase;
+            }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Wrong sequence", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //warning window
+            }
+
         }
     }
 }
