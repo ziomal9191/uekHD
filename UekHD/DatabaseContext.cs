@@ -21,6 +21,8 @@ namespace UekHD
     public class CommentDb
     {
         public int CommentDbID { set; get; }
+        [System.ComponentModel.DataAnnotations.MaxLength]
+        [System.ComponentModel.DataAnnotations.Schema.Column(TypeName = "ntext")]
         public string Comment { set; get; }
         public double Stars { set; get; }
         public string Advantages { set; get; }
