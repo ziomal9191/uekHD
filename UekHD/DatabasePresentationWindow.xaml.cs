@@ -25,7 +25,7 @@ namespace UekHD
             using (DatabaseContext siContext = new DatabaseContext())
             {
                 var query = (from Product in siContext.Product
-                            select  Product.Comments).ToList();
+                            select  Product).ToList();
                 //var co = query.Select<CommentDb>();
                 /*  var l = from Product.Comments in query select CommentDb;
                   List<String> comments;
@@ -33,17 +33,18 @@ namespace UekHD
                   {
                       comments.Add(v.Comment);
                   }*/
-                List<CommentDb> comments = new List<CommentDb>();
+                List<Product> comments = new List<Product>();
 
                 foreach (var comment in query)
                 {
-                    if (comment.Count>0)
+                    comments.Add(comment);
+                    /*if (comment.Count>0)
                     {
                         foreach (var com in comment)
                         {
                             comments.Add(com);
                         }
-                    }
+                    }*/
                    // comments.Add(from x in siContext.Comments where x.CommentDbID = comment.CommentDbID);
                 }
                 //var l = from CommentDb in query select CommentDb.Comment;

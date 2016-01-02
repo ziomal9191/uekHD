@@ -9,5 +9,7 @@ namespace UekHD
     interface ICommentParser
     {
         CommentList getCommentsContentFromPage(string pageContent, Product product);
+        string getModelName(string pageContent);
+        string getBrandName(string pageContent);
     }
 }

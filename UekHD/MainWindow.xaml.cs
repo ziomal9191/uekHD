@@ -21,10 +21,13 @@ namespace UekHD
             System.Diagnostics.Trace.WriteLine("Text box changed ");
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void buttonEtl(object sender, RoutedEventArgs e)
         {
             string textToGetComments = TextBox.GetLineText(0);
-            HttpCommentGeter httpGeter = new HttpCommentGeter(textToGetComments);
+            IStatisctics statistics = new StatiscticsObject();
+            HttpCommentGeter httpGeter = new HttpCommentGeter(textToGetComments,
+                                                              statistics);
+            httpGeter.loadProductToDataBase();
         }
 
         private void buttonClearDb(object sender, RoutedEventArgs e)
@@ -47,7 +50,13 @@ namespace UekHD
 
             if (!wasTransform && wasLoad && !wasExtract)
             {
+
                 wasExtract = true;
+                string textToGetComments = TextBox.GetLineText(0);
+                IStatisctics statistics = new StatiscticsObject();
+                httpGeter = new HttpCommentGeter(textToGetComments,
+                                                              statistics);
+                
             }
             else
             {
@@ -78,6 +87,7 @@ namespace UekHD
             {
                 wasExtract = false;
                 wasTransform = false;
+                httpGeter.loadProductToDataBase();
                // wasLoad = flase;
             }
             else
@@ -85,7 +95,9 @@ namespace UekHD
                 MessageBoxResult result = MessageBox.Show("Wrong sequence", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 //warning window
             }
-
+            
         }
+        private HttpCommentGeter httpGeter;
+
     }
 }

@@ -8,13 +8,18 @@ namespace UekHD
 
     class HttpCommentGeter
     {
-        public HttpCommentGeter(string productId)
+        public HttpCommentGeter(string productId, IStatisctics statistic)
         {
             //19299330
-           IWebCrawler m_webCrawler = new CeneoWebCrawler("http://www.ceneo.pl/" + productId + "#tab=reviews");
-           m_webCrawler.getCommentList();
-
+           m_webCrawler = new CeneoWebCrawler("http://www.ceneo.pl/" + productId + "#tab=reviews");
+           product = m_webCrawler.getCommentList( statistic);
+           //m_webCrawler.addProductToDatabase()
         }
-        
+        public void loadProductToDataBase()
+        {
+            m_webCrawler.addProductToDatabase(product);
+        }
+        IWebCrawler m_webCrawler;
+        private Product product;
     }
 }

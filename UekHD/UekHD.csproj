@@ -91,6 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="StatiscticsObject.cs" />
     <Page Include="DatabasePresentationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,6 +116,7 @@
     <Compile Include="ICommentParser.cs" />
     <Compile Include="ILinkProvider.cs" />
     <Compile Include="IProductComment.cs" />
+    <Compile Include="IStatisctics.cs" />
     <Compile Include="IWebCrawler.cs" />
     <Compile Include="LinkProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
-    interface IWebCrawler
+    interface IStatisctics
     {
-        Product getCommentList(IStatisctics statistic);
-        void addProductToDatabase(Product product);
+         void addDowlodedPage(string url);
+         List<string> getDowloadedPages();
+
     }
 }

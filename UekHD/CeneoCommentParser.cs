@@ -10,13 +10,13 @@ using System.Windows;
 namespace UekHD
 {
 
-   
+
     class CeneoCommentParser : ICommentParser
     {
-        public CommentList getCommentsContentFromPage(string pageContent, Product product1)
+        public CommentList getCommentsContentFromPage(string pageContent, Product product)
         {
 
-   
+
             htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageContent);
             CommentList listOfComments = new CommentList();
@@ -31,33 +31,8 @@ namespace UekHD
                 if (htmlDoc.DocumentNode != null)
                 {
                     //Parsing start
-                    Product product = new Product();
+                    //Product product = new Product();
                     fillProductInfo(product);
-                    try
-                    {
-                        using (var db = new DatabaseContext())
-                        {
-                            db.Product.Add(product);
-                            db.SaveChanges();
-                        }
-                    }
-                    catch (System.Data.Entity.Validation.DbEntityValidationException ex)
-                    {
-                        // Retrieve the error messages as a list of strings.
-                        var errorMessages = ex.EntityValidationErrors
-                                .SelectMany(x => x.ValidationErrors)
-                                .Select(x => x.ErrorMessage);
-
-                        // Join the list to a single string.
-                        var fullErrorMessage = string.Join("; ", errorMessages);
-
-                        // Combine the original exception message with the new one.
-                        var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
-
-                        // Throw a new DbEntityValidationException with the improved exception message.
-                        throw new System.Data.Entity.Validation.DbEntityValidationException(exceptionMessage, ex.EntityValidationErrors);
-                    }
-
                 }
             }
             return listOfComments;
@@ -73,15 +48,39 @@ namespace UekHD
 
         private void fillComment(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
+               fillCommentContent(comment, node);
+                fillStar(comment, node);
+                fillAdvantages(comment, node);
+                fillDisadvantages(comment, node);
+                fillAuthor(comment, node);
+                fillCommentDate(comment, node);
+                fillRecommend(comment, node);
+                fillUsability(comment, node);
+        //    }
+        }
 
-            fillCommentContent(comment, node);
-            fillStar(comment, node);
-            fillAdvantages(comment, node);
-            fillDisadvantages(comment, node);
-            fillAuthor(comment, node);
-            fillCommentDate(comment, node);
-            fillRecommend(comment, node);
-            fillUsability(comment, node);
+        private bool isCommentExistInProduct(Product product, HtmlNode node)
+        {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//p[@class=\"product-review-body\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            string commentToParse = "";
+            
+            if (bodyNodes != null)
+            {
+               foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
+                {
+                    commentToParse += commentNode.InnerText;
+                }
+            }
+            foreach(CommentDb commentsInDb in product.Comments)
+            {
+                if (commentsInDb.Comment == null) { continue; }
+                if (commentsInDb.Comment.Equals(commentToParse))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void fillUsability(CommentDb comment, HtmlNode node)
@@ -122,7 +121,7 @@ namespace UekHD
                         comment.Recommend = false;
                     }
                 }
-                
+
             }
         }
 
@@ -137,7 +136,7 @@ namespace UekHD
                     {
 
                         if (attribut.Name == "datetime")
-                        { 
+                        {
                             comment.Date = DateTime.Parse(attribut.Value);
                         }
                     }
@@ -165,11 +164,10 @@ namespace UekHD
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
                 {
-                   // MessageBoxResult result = MessageBox.Show(commentNode.InnerText, "Confirmation", MessageBoxButton.OK, MessageBoxImage.Warning);
                     comment.Comment += commentNode.InnerText;
                 }
             }
-            
+
         }
         private void fillAdditionalComment(Product product)
         {
@@ -256,13 +254,55 @@ namespace UekHD
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//ol[@class=\"product-reviews js_product-reviews js_reviews-hook\"]/li");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
             if (bodyNodes != null)
             {
-                foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
+            foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
+            {
+                if (!isCommentExistInProduct(product, node))
                 {
-                    CommentDb comment = new CommentDb(); 
+
+                    CommentDb comment = new CommentDb();
                     fillComment(comment, node);
                     product.Comments.Add(comment);
                 }
             }
+            }
+        }
+        public string getModelName(string pageContent)
+        {
+            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            htmlDoc.LoadHtml(pageContent);
+
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
+                {
+                    string[] brand = nodeType.InnerHtml.Split(' ');
+                    string model = "";
+                    for (int i = 1; i < brand.Length; i++)
+                    {
+                        model += brand[i] + " ";
+                    }
+                    return model;
+                }
+            }
+            return "";
+        }
+        public string getBrandName(string pageContent)
+        {
+            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            htmlDoc.LoadHtml(pageContent);
+            // HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
+
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
+                {
+                    string[] brand = nodeType.InnerHtml.Split(' ');
+                    return brand[0];
+                }
+            }
+            return "";
         }
         HtmlAgilityPack.HtmlDocument htmlDoc;
     }
