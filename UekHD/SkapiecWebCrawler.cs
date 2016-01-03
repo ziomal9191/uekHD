@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
-    class CeneoWebCrawler : IWebCrawler
+    class SkapiecWebCrawler: IWebCrawler
     {
-        public CeneoWebCrawler(string downladString)
+        public SkapiecWebCrawler(string downladString)
         {
             m_downloadString = downladString;
         }
@@ -17,7 +17,7 @@ namespace UekHD
             System.Net.WebClient client = new System.Net.WebClient();
             client.Encoding = Encoding.UTF8;
             CommentList comments = new CommentList();
-            ILinkProvider provider = new LinkProvider(m_downloadString);
+            ILinkProvider provider = new SkapiecLinkProvider(m_downloadString);
             using (var db = new DatabaseContext())
             {
 
@@ -26,11 +26,11 @@ namespace UekHD
                 {
                     statistic.addDowlodedPage(link);
                     string pageContent = client.DownloadString(link);
-                    comments.AddRange(ceneoParser.getCommentsContentFromPage(pageContent, product));
+                    comments.AddRange(skapiecParser.getCommentsContentFromPage(pageContent, product));
                 }
                 return product;
             }
-            
+
         }
 
         public void addProductToDatabase(Product product)
@@ -39,10 +39,12 @@ namespace UekHD
             {
                 using (var db = new DatabaseContext())
                 {
-                    IQueryable<Product> productsInDb = from p in db.Product where 
-                                              p.Brand.Equals(product.Brand) && 
-                                              p.Model.Equals(product.Model) &&
-                                              p.Type.Equals(product.Type) select p;// select db.Product;//and p.Model.E;
+                    IQueryable<Product> productsInDb = from p in db.Product
+                                                       where
+                         p.Brand.Equals(product.Brand) &&
+                         p.Model.Equals(product.Model) &&
+                         p.Type.Equals(product.Type)
+                                                       select p;// select db.Product;//and p.Model.E;
 
                     if (productsInDb != null)
                     {
@@ -53,7 +55,7 @@ namespace UekHD
                                 bool contains = productInDb.Comments.Any(x => {
                                     bool returnValue = true;
                                     if (dowloadedProd.Advantages != null && x.Advantages != null)
-                                        returnValue &=  dowloadedProd.Advantages.Equals(x.Advantages);
+                                        returnValue &= dowloadedProd.Advantages.Equals(x.Advantages);
                                     if (dowloadedProd.Disadvantages != null && x.Disadvantages != null)
                                         returnValue &= dowloadedProd.Disadvantages.Equals(x.Disadvantages);
                                     if (dowloadedProd.Comment != null && x.Comment != null)
@@ -74,11 +76,11 @@ namespace UekHD
                                 }
                             }
                         }
-                        if (productsInDb.Count()==0)
+                        if (productsInDb.Count() == 0)
                         {
                             db.Product.Add(product);
                         }
-                        
+
                     }
                     else
                     {
@@ -106,8 +108,7 @@ namespace UekHD
 
 
         }
-        private ICommentParser ceneoParser = new CeneoCommentParser();
+        private ICommentParser skapiecParser = new SkapiecCommentParser();
         private string m_downloadString;
-
     }
 }

@@ -1,17 +1,10 @@
-﻿using System.Linq;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.SqlClient;
-using System.Data.Entity.Core.EntityClient;
+﻿using HtmlAgilityPack;
 using System;
-using HtmlAgilityPack;
-using System.Windows;
+using System.Linq;
 
 namespace UekHD
 {
-
-
-    class CeneoCommentParser : ICommentParser
+    internal class SkapiecCommentParser : ICommentParser
     {
         public CommentList getCommentsContentFromPage(string pageContent, Product product)
         {
@@ -39,37 +32,36 @@ namespace UekHD
         private void fillProductInfo(Product product)
         {
             fillComments(product);
-            fillType(product);
-            fillBrandAndModel(product);
-            fillAdditionalComment(product);
+           // fillType(product);
+           // fillBrandAndModel(product);
+           // fillAdditionalComment(product);
         }
 
         private void fillComment(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
-               fillCommentContent(comment, node);
-                fillStar(comment, node);
-                fillAdvantages(comment, node);
-                fillDisadvantages(comment, node);
-                fillAuthor(comment, node);
-                fillCommentDate(comment, node);
-                fillRecommend(comment, node);
-                fillUsability(comment, node);
-        //    }
+            fillCommentContent(comment, node);
+            fillStar(comment, node);
+            fillAdvantages(comment, node);
+            fillDisadvantages(comment, node);
+            fillAuthor(comment, node);
+            fillCommentDate(comment, node);
+            fillRecommend(comment, node);
+            fillUsability(comment, node);
         }
 
         private bool isCommentExistInProduct(Product product, HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//p[@class=\"product-review-body\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//div[@class=\"opinion-container\"]//p");
             string commentToParse = "";
-            
+
             if (bodyNodes != null)
             {
-               foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
+                foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
                 {
                     commentToParse += commentNode.InnerText;
                 }
             }
-            foreach(CommentDb commentsInDb in product.Comments)
+            foreach (CommentDb commentsInDb in product.Comments)
             {
                 if (commentsInDb.Comment == null) { continue; }
                 if (commentsInDb.Comment.Equals(commentToParse))
@@ -83,24 +75,43 @@ namespace UekHD
 
         private void fillUsability(CommentDb comment, HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//span[@class=\"product-review-usefulness-stats\"]//span");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//span[@class=\"btn gray link\"]");
+            int votesToYes = 0;
             if (bodyNodes != null)
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
                 {
-                    if (!commentNode.Attributes[0].Value.Contains("percent"))
+                    if (commentNode.InnerHtml.Contains("ico-hand-down"))
                     {
-                        if (commentNode.Attributes[0].Value.Contains("-yes-"))
-                        {
-                            comment.Usability = Convert.ToInt32(commentNode.InnerText);
-                        }
-                        else
-                        {
-                            comment.UsabilityVotes = Convert.ToInt32(commentNode.InnerText);
-                        }
+                    string textToParse = commentNode.InnerHtml;
+                    textToParse = textToParse.Replace("<i class=\"ico-hand-down\">&nbsp;</i>Pomocna (", "");
+                    textToParse = textToParse.Replace(")", "");
+                    votesToYes =  Convert.ToInt32(textToParse);
+                    comment.Usability = votesToYes;
+                    
                     }
+                    else
+                    {
+
+                    string textToParse = commentNode.InnerHtml;
+                    textToParse = textToParse.Replace("<i class=\"ico-hand-up\">\n                      &nbsp;</i>(", "");
+                    textToParse = textToParse.Replace(")", "");
+                    comment.UsabilityVotes = votesToYes + Convert.ToInt32(textToParse);
+                    
+                    }
+                   
                 }
             }
+            bodyNodes = node.SelectNodes("./span[@class=\"btn gray link\"][2]");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
+                {
+                    string ll = commentNode.InnerHtml;
+                    //comment.Usability = Convert.ToInt32(commentNode.InnerText);
+                }
+            }
+
         }
 
         private void fillRecommend(CommentDb comment, HtmlNode node)
@@ -125,19 +136,12 @@ namespace UekHD
 
         private void fillCommentDate(CommentDb comment, HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//div[@class=\"content-wide-col\"]//div//span[@class=\"review-time\"]//time");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath+"span[@class=\"date\"]");
             if (bodyNodes != null)
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
                 {
-                    foreach (HtmlAgilityPack.HtmlAttribute attribut in commentNode.Attributes)
-                    {
-
-                        if (attribut.Name == "datetime")
-                        {
-                            comment.Date = DateTime.Parse(attribut.Value);
-                        }
-                    }
+                            comment.Date = DateTime.Parse(commentNode.InnerHtml);
                     break;
                 }
             }
@@ -145,7 +149,7 @@ namespace UekHD
 
         private void fillAuthor(CommentDb comment, HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//div[@class=\"product-reviewer\"]");//div//span[@class=\"review-time\"]//time");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath+"span[@class=\"author\"]");//div//span[@class=\"review-time\"]//time");
             if (bodyNodes != null)
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
@@ -157,7 +161,7 @@ namespace UekHD
 
         private void fillCommentContent(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//p[@class=\"product-review-body\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            HtmlNodeCollection bodyNodes = node.SelectNodes(".//div[@class=\"opinion-container\"]//p");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
             if (bodyNodes != null)
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
@@ -209,7 +213,7 @@ namespace UekHD
 
         private void fillDisadvantages(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//span[@class=\"cons-cell\"]//li");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath + "ul[@class=\"pros-n-cons\"]//li[2]");
             if (bodyNodes != null)
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
@@ -222,7 +226,7 @@ namespace UekHD
 
         private void fillAdvantages(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//span[@class=\"pros-cell\"]//li");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath + "ul[@class=\"pros-n-cons\"]//li[1]");
             if (bodyNodes != null)
             {
                 foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
@@ -249,19 +253,19 @@ namespace UekHD
 
         void fillComments(Product product)
         {
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//ol[@class=\"product-reviews js_product-reviews js_reviews-hook\"]/li");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//ul[@class=\"opinion-list\"]/li");
             if (bodyNodes != null)
             {
-            foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
-            {
-                if (!isCommentExistInProduct(product, node))
+                foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
                 {
+                    if (!isCommentExistInProduct(product, node))
+                    {
 
-                    CommentDb comment = new CommentDb();
-                    fillComment(comment, node);
-                    product.Comments.Add(comment);
+                        CommentDb comment = new CommentDb();
+                        fillComment(comment, node);
+                        product.Comments.Add(comment);
+                    }
                 }
-            }
             }
         }
         public string getModelName(string pageContent)
@@ -278,11 +282,11 @@ namespace UekHD
                     string model = "";
                     for (int i = 1; i < brand.Length; i++)
                     {
-                        
+
                         model += brand[i] + " ";
                     }
-                    if(model.Length>2)
-                    model =model.Remove(model.Length - 1);
+                    if (model.Length > 2)
+                        model = model.Remove(model.Length - 1);
                     return model;
                 }
             }
@@ -305,5 +309,6 @@ namespace UekHD
             return "";
         }
         HtmlAgilityPack.HtmlDocument htmlDoc;
+        string containerPath = ".//div[@class=\"opinion-container\"]//";
     }
 }

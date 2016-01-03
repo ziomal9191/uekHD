@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
+    public enum Portal {Cene, Inne };
     public class Product
     {
         public Product() { Comments = new List<CommentDb>(); }
@@ -32,6 +33,8 @@ namespace UekHD
         public bool Recommend { set; get; }
         public int Usability { set; get; }
         public int UsabilityVotes { set; get; }
+        public Portal PortalName { set; get; }
+
     }
     public class DatabaseContext : DbContext
     {
