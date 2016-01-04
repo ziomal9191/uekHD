@@ -98,7 +98,10 @@ namespace UekHD
                     }
                 }
             }
-            return bestFit.Item2;
+            if (bestFit.Item3 < 20)
+                return bestFit.Item2;
+            else
+                return null;
 
         }
 

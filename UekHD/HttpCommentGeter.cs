@@ -15,10 +15,12 @@ namespace UekHD
             m_webCrawler = new CeneoWebCrawler("http://www.ceneo.pl/" + productId + "#tab=reviews");
             product = m_webCrawler.getCommentList( statistic, product);
             ILinkToProductFinder productFinder = new SkapiecLinkToProductFinder();
-
-            m_webCrawler = new SkapiecWebCrawler("http://www.skapiec.pl" + productFinder.getLinkToProduct(product) + "#opinie");
-            product = m_webCrawler.getCommentList( statistic, product);
-
+            string foundProduct = productFinder.getLinkToProduct(product);
+            if (foundProduct != null)
+            {
+                m_webCrawler = new SkapiecWebCrawler("http://www.skapiec.pl" + productFinder.getLinkToProduct(product) + "#opinie");
+                product = m_webCrawler.getCommentList(statistic, product);
+            }
 
         }
         public void loadProductToDataBase()

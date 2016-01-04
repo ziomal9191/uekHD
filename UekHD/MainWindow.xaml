@@ -15,6 +15,7 @@
         <Button x:Name="transform" Content="T" HorizontalAlignment="Left" Margin="216,103,0,0" VerticalAlignment="Top" Width="75" Click="buttonTransform"/>
         <Button x:Name="load" Content="L" HorizontalAlignment="Left" Margin="216,130,0,0" VerticalAlignment="Top" Width="75" Click="buttonLoad" Height="21"/>
         <Button x:Name="button2" Content="Present DB" HorizontalAlignment="Left" Margin="128,76,0,0" VerticalAlignment="Top" Width="75" Click="buttonPresentDatabse"/>
+        <Button x:Name="button1" Content="Save to file" HorizontalAlignment="Left" Margin="128,103,0,0" VerticalAlignment="Top" Width="75" Click="buttonSaveToFile"/>
 
     </Grid>
 </Window>

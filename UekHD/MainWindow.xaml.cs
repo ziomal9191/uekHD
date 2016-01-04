@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Serialization;
 
 namespace UekHD
 {
@@ -97,7 +99,21 @@ namespace UekHD
             }
             
         }
-        private HttpCommentGeter httpGeter;
 
+
+        private void buttonSaveToFile(object sender, RoutedEventArgs e)
+        {
+            using (DatabaseContext siContext = new DatabaseContext())
+            {
+                foreach (Product p in siContext.Product)
+                {
+                    XmlSerializer writer = new XmlSerializer(p.GetType());
+                    StreamWriter file = new StreamWriter("data.xml");
+                    writer.Serialize(file, p);
+                    file.Close();
+                }
+            }
+        }
+        private HttpCommentGeter httpGeter;
     }
 }
