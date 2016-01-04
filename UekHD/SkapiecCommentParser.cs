@@ -6,13 +6,12 @@ namespace UekHD
 {
     internal class SkapiecCommentParser : ICommentParser
     {
-        public CommentList getCommentsContentFromPage(string pageContent, Product product)
+        public void getCommentsContentFromPage(string pageContent, Product product)
         {
 
 
             htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageContent);
-            CommentList listOfComments = new CommentList();
             if (htmlDoc.ParseErrors != null && htmlDoc.ParseErrors.Count() > 0)
             {
                 throw new System.ExecutionEngineException();
@@ -26,15 +25,11 @@ namespace UekHD
                     fillProductInfo(product);
                 }
             }
-            return listOfComments;
         }
 
         private void fillProductInfo(Product product)
         {
             fillComments(product);
-           // fillType(product);
-           // fillBrandAndModel(product);
-           // fillAdditionalComment(product);
         }
 
         private void fillComment(CommentDb comment, HtmlAgilityPack.HtmlNode node)
@@ -262,51 +257,12 @@ namespace UekHD
                     {
 
                         CommentDb comment = new CommentDb();
+                        comment.PortalName = "Skapiec";
                         fillComment(comment, node);
                         product.Comments.Add(comment);
                     }
                 }
             }
-        }
-        public string getModelName(string pageContent)
-        {
-            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
-            htmlDoc.LoadHtml(pageContent);
-
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
-            if (bodyNodes != null)
-            {
-                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
-                {
-                    string[] brand = nodeType.InnerHtml.Split(' ');
-                    string model = "";
-                    for (int i = 1; i < brand.Length; i++)
-                    {
-
-                        model += brand[i] + " ";
-                    }
-                    if (model.Length > 2)
-                        model = model.Remove(model.Length - 1);
-                    return model;
-                }
-            }
-            return "";
-        }
-        public string getBrandName(string pageContent)
-        {
-            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
-            htmlDoc.LoadHtml(pageContent);
-
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
-            if (bodyNodes != null)
-            {
-                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
-                {
-                    string[] brand = nodeType.InnerHtml.Split(' ');
-                    return brand[0];
-                }
-            }
-            return "";
         }
         HtmlAgilityPack.HtmlDocument htmlDoc;
         string containerPath = ".//div[@class=\"opinion-container\"]//";

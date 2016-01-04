@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
-    class LinkProvider : ILinkProvider
+    class CeneoLinkProvider : ILinkProvider
     {
-        public LinkProvider(string pageLink)
+        public CeneoLinkProvider(string pageLink)
         {
             m_pageLink = pageLink;
         }

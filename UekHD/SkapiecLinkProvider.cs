@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
-    class SkapiecLinkProvider: ILinkProvider
+    class SkapiecLinkProvider : ILinkProvider
     {
         public SkapiecLinkProvider(string pageLink)
         {
@@ -29,7 +29,7 @@ namespace UekHD
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageContent);
 
-            
+
             string xpath = "";
             xpath = ".//div[@class=\"partial pager\"]/ul[@class=\"numeric-list\"]//li//a";
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes(xpath);
@@ -51,16 +51,8 @@ namespace UekHD
                     }
                     else
                     {
-                        //HtmlAgilityPack.HtmlNodeCollection links = node.ChildNodes;
-                        //foreach (HtmlAgilityPack.HtmlNode nodeLink in node)
-                        // {
-                        //    foreach (HtmlAgilityPack.HtmlAttribute attribut in node.Attributes)
-                        //    {
                         m_pageLink = "http://www.skapiec.pl" + node.GetAttributeValue("href", "");
-                                return m_pageLink;
-
-                         //   }
-                        //}
+                        return m_pageLink;
                     }
                 }
             }

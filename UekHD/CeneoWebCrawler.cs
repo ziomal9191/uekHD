@@ -16,8 +16,7 @@ namespace UekHD
         {
             System.Net.WebClient client = new System.Net.WebClient();
             client.Encoding = Encoding.UTF8;
-            CommentList comments = new CommentList();
-            ILinkProvider provider = new LinkProvider(m_downloadString);
+            ILinkProvider provider = new CeneoLinkProvider(m_downloadString);
             using (var db = new DatabaseContext())
             {
 
@@ -26,7 +25,7 @@ namespace UekHD
                 {
                     statistic.addDowlodedPage(link);
                     string pageContent = client.DownloadString(link);
-                    comments.AddRange(ceneoParser.getCommentsContentFromPage(pageContent, product));
+                    ceneoParser.getCommentsContentFromPage(pageContent, product);
                 }
                 return product;
             }

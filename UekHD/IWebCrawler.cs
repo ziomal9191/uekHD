@@ -8,7 +8,6 @@ namespace UekHD
 {
     interface IWebCrawler
     {
-       // Product getCommentList(IStatisctics statistic);
         void addProductToDatabase(Product product);
         Product getCommentList(IStatisctics statistic, Product product);
     }

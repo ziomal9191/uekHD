@@ -13,18 +13,16 @@ namespace UekHD
 
     class CeneoCommentParser : ICommentParser
     {
-        public CommentList getCommentsContentFromPage(string pageContent, Product product)
+        public void getCommentsContentFromPage(string pageContent, Product product)
         {
 
 
             htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageContent);
-            CommentList listOfComments = new CommentList();
             if (htmlDoc.ParseErrors != null && htmlDoc.ParseErrors.Count() > 0)
             {
                 throw new System.ExecutionEngineException();
                 // Handle any parse errors as required
-
             }
             else
             {
@@ -33,7 +31,6 @@ namespace UekHD
                     fillProductInfo(product);
                 }
             }
-            return listOfComments;
         }
 
         private void fillProductInfo(Product product)
@@ -46,30 +43,29 @@ namespace UekHD
 
         private void fillComment(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
-               fillCommentContent(comment, node);
-                fillStar(comment, node);
-                fillAdvantages(comment, node);
-                fillDisadvantages(comment, node);
-                fillAuthor(comment, node);
-                fillCommentDate(comment, node);
-                fillRecommend(comment, node);
-                fillUsability(comment, node);
-        //    }
+            fillCommentContent(comment, node);
+            fillStar(comment, node);
+            fillAdvantages(comment, node);
+            fillDisadvantages(comment, node);
+            fillAuthor(comment, node);
+            fillCommentDate(comment, node);
+            fillRecommend(comment, node);
+            fillUsability(comment, node);
         }
 
         private bool isCommentExistInProduct(Product product, HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//p[@class=\"product-review-body\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
             string commentToParse = "";
-            
+
             if (bodyNodes != null)
             {
-               foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
+                foreach (HtmlAgilityPack.HtmlNode commentNode in bodyNodes)
                 {
                     commentToParse += commentNode.InnerText;
                 }
             }
-            foreach(CommentDb commentsInDb in product.Comments)
+            foreach (CommentDb commentsInDb in product.Comments)
             {
                 if (commentsInDb.Comment == null) { continue; }
                 if (commentsInDb.Comment.Equals(commentToParse))
@@ -252,57 +248,18 @@ namespace UekHD
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//ol[@class=\"product-reviews js_product-reviews js_reviews-hook\"]/li");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
             if (bodyNodes != null)
             {
-            foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
-            {
-                if (!isCommentExistInProduct(product, node))
+                foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
                 {
-
-                    CommentDb comment = new CommentDb();
-                    fillComment(comment, node);
-                    product.Comments.Add(comment);
-                }
-            }
-            }
-        }
-        public string getModelName(string pageContent)
-        {
-            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
-            htmlDoc.LoadHtml(pageContent);
-
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
-            if (bodyNodes != null)
-            {
-                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
-                {
-                    string[] brand = nodeType.InnerHtml.Split(' ');
-                    string model = "";
-                    for (int i = 1; i < brand.Length; i++)
+                    if (!isCommentExistInProduct(product, node))
                     {
-                        
-                        model += brand[i] + " ";
-                    }
-                    if(model.Length>2)
-                    model =model.Remove(model.Length - 1);
-                    return model;
-                }
-            }
-            return "";
-        }
-        public string getBrandName(string pageContent)
-        {
-            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
-            htmlDoc.LoadHtml(pageContent);
 
-            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
-            if (bodyNodes != null)
-            {
-                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
-                {
-                    string[] brand = nodeType.InnerHtml.Split(' ');
-                    return brand[0];
+                        CommentDb comment = new CommentDb();
+                        comment.PortalName = "Ceneo";
+                        fillComment(comment, node);
+                        product.Comments.Add(comment);
+                    }
                 }
             }
-            return "";
         }
         HtmlAgilityPack.HtmlDocument htmlDoc;
     }

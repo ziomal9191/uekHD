@@ -16,7 +16,6 @@ namespace UekHD
         {
             System.Net.WebClient client = new System.Net.WebClient();
             client.Encoding = Encoding.UTF8;
-            CommentList comments = new CommentList();
             ILinkProvider provider = new SkapiecLinkProvider(m_downloadString);
             using (var db = new DatabaseContext())
             {
@@ -26,7 +25,7 @@ namespace UekHD
                 {
                     statistic.addDowlodedPage(link);
                     string pageContent = client.DownloadString(link);
-                    comments.AddRange(skapiecParser.getCommentsContentFromPage(pageContent, product));
+                    skapiecParser.getCommentsContentFromPage(pageContent, product);
                 }
                 return product;
             }
