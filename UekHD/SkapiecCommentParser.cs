@@ -59,7 +59,7 @@ namespace UekHD
             foreach (CommentDb commentsInDb in product.Comments)
             {
                 if (commentsInDb.Comment == null) { continue; }
-                if (commentsInDb.Comment.Equals(commentToParse))
+                if (commentsInDb.Comment.Equals(commentToParse) && commentsInDb.PortalName.Contains("Skapiec"))
                 {
                     return true;
                 }
@@ -251,6 +251,7 @@ namespace UekHD
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//ul[@class=\"opinion-list\"]/li");
             if (bodyNodes != null)
             {
+                int dd = 0;
                 foreach (HtmlAgilityPack.HtmlNode node in bodyNodes)
                 {
                     if (!isCommentExistInProduct(product, node))
@@ -260,7 +261,9 @@ namespace UekHD
                         comment.PortalName = "Skapiec";
                         fillComment(comment, node);
                         product.Comments.Add(comment);
+                        
                     }
+                    dd++;
                 }
             }
         }

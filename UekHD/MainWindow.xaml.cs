@@ -105,12 +105,39 @@ namespace UekHD
         {
             using (DatabaseContext siContext = new DatabaseContext())
             {
-                foreach (Product p in siContext.Product)
+                List<Product> query = (from Product in siContext.Product 
+                                           select Product).ToList();
+                using (var writer = System.Xml.XmlWriter.Create("foo.xml"))
                 {
-                    XmlSerializer writer = new XmlSerializer(p.GetType());
-                    StreamWriter file = new StreamWriter("data.xml");
-                    writer.Serialize(file, p);
-                    file.Close();
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("InfoDb");
+                    foreach (Product product in query)
+                    {
+                        writer.WriteStartElement("Product");
+                        writer.WriteElementString("ProductId", product.ProductId.ToString());
+                        writer.WriteElementString("Type", product.Type);
+                        writer.WriteElementString("Brand", product.Brand);
+                        writer.WriteElementString("Model", product.Model);
+                        foreach (CommentDb comment in product.Comments)
+                        {
+                            writer.WriteStartElement("CommentBlock");
+                            writer.WriteElementString("CommentDbID", comment.CommentDbID.ToString());
+                            writer.WriteElementString("Comment", comment.Comment);
+                            writer.WriteElementString("Stars", comment.Stars.ToString());
+                            writer.WriteElementString("Advantages", comment.Advantages);
+                            writer.WriteElementString("Disadvantages", comment.Disadvantages);
+                            writer.WriteElementString("Author", comment.Author);
+                            writer.WriteElementString("Date", comment.Date.ToString());
+                            writer.WriteElementString("Recomend", comment.Recommend.ToString());
+                            writer.WriteElementString("Usability", comment.Usability.ToString());
+                            writer.WriteElementString("UsabilityVotes", comment.UsabilityVotes.ToString());
+                            writer.WriteElementString("PortalName", comment.PortalName);
+                            writer.WriteEndElement();
+
+                        }
+                        writer.WriteEndElement();
+                        //  serializer.Serialize(writer, query);
+                    }
                 }
             }
         }

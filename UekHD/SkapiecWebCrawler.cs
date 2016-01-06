@@ -68,7 +68,7 @@ namespace UekHD
                                     returnValue &= dowloadedProd.Author.Equals(x.Author);
                                     return returnValue;
                                 });
-                                if (/*productInDb.Comments.Contains(dowloadedProd)*/contains) { }
+                                if (contains) { }
                                 else
                                 {
                                     productInDb.Comments.Add(dowloadedProd);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
-    public class Product : ICollection
+    public class Product
     {
         public Product() { Comments = new List<CommentDb>(); }
         public int ProductId { set; get; }
@@ -18,52 +18,6 @@ namespace UekHD
         public string Model { set; get; }
         public string AdditionalComment { set; get;  }
 
-        public int Count
-        {
-            get
-            {
-               return Comments.Count;
-            }
-        }
-        public CommentDb this[int index]
-        {
-            get
-            {
-                return Comments.ToArray()[index];
-                
-            }
-            set { /* Do Nothing */ }
-        }
-        public object SyncRoot
-        {
-            get
-            {
-                return this;
-
-            }
-        }
-
-        public bool IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public void CopyTo(Array array, int index)
-        {
-            Comments.ToArray().CopyTo(array, index);
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return Comments.GetEnumerator();
-        }
-        public void Add(CommentDb newEmployee)
-        {
-            Comments.Add(newEmployee);
-        }
     }
     public class CommentDb
     {

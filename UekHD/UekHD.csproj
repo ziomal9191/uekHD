@@ -70,6 +70,10 @@
       <HintPath>..\packages\LevenshteinMinimumEditDistance.1.2.0\lib\MinimumEditDistance.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SerializeEncrypt, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c872ee7e5d26814b, processorArchitecture=MSIL">
+      <HintPath>..\packages\SerializeEncrypt.1.0.1\lib\net45\SerializeEncrypt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
