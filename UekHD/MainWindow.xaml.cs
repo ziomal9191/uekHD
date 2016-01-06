@@ -103,40 +103,46 @@ namespace UekHD
 
         private void buttonSaveToFile(object sender, RoutedEventArgs e)
         {
-            using (DatabaseContext siContext = new DatabaseContext())
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.FileName = "Document"; // Default file name
+            dialog.DefaultExt = ".xml"; // Default file extension
+            dialog.Filter = "Xml documents (.xml)|*.xml"; // Filter files by extension
+            if (dialog.ShowDialog(this) == true)
             {
-                List<Product> query = (from Product in siContext.Product 
-                                           select Product).ToList();
-                using (var writer = System.Xml.XmlWriter.Create("foo.xml"))
+                using (DatabaseContext siContext = new DatabaseContext())
                 {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("InfoDb");
-                    foreach (Product product in query)
+                    List<Product> query = (from Product in siContext.Product
+                                           select Product).ToList();
+                    using (var writer = System.Xml.XmlWriter.Create(dialog.FileName))
                     {
-                        writer.WriteStartElement("Product");
-                        writer.WriteElementString("ProductId", product.ProductId.ToString());
-                        writer.WriteElementString("Type", product.Type);
-                        writer.WriteElementString("Brand", product.Brand);
-                        writer.WriteElementString("Model", product.Model);
-                        foreach (CommentDb comment in product.Comments)
+                        writer.WriteStartDocument();
+                        writer.WriteStartElement("InfoDb");
+                        foreach (Product product in query)
                         {
-                            writer.WriteStartElement("CommentBlock");
-                            writer.WriteElementString("CommentDbID", comment.CommentDbID.ToString());
-                            writer.WriteElementString("Comment", comment.Comment);
-                            writer.WriteElementString("Stars", comment.Stars.ToString());
-                            writer.WriteElementString("Advantages", comment.Advantages);
-                            writer.WriteElementString("Disadvantages", comment.Disadvantages);
-                            writer.WriteElementString("Author", comment.Author);
-                            writer.WriteElementString("Date", comment.Date.ToString());
-                            writer.WriteElementString("Recomend", comment.Recommend.ToString());
-                            writer.WriteElementString("Usability", comment.Usability.ToString());
-                            writer.WriteElementString("UsabilityVotes", comment.UsabilityVotes.ToString());
-                            writer.WriteElementString("PortalName", comment.PortalName);
-                            writer.WriteEndElement();
+                            writer.WriteStartElement("Product");
+                            writer.WriteElementString("ProductId", product.ProductId.ToString());
+                            writer.WriteElementString("Type", product.Type);
+                            writer.WriteElementString("Brand", product.Brand);
+                            writer.WriteElementString("Model", product.Model);
+                            foreach (CommentDb comment in product.Comments)
+                            {
+                                writer.WriteStartElement("CommentBlock");
+                                writer.WriteElementString("CommentDbID", comment.CommentDbID.ToString());
+                                writer.WriteElementString("Comment", comment.Comment);
+                                writer.WriteElementString("Stars", comment.Stars.ToString());
+                                writer.WriteElementString("Advantages", comment.Advantages);
+                                writer.WriteElementString("Disadvantages", comment.Disadvantages);
+                                writer.WriteElementString("Author", comment.Author);
+                                writer.WriteElementString("Date", comment.Date.ToString());
+                                writer.WriteElementString("Recomend", comment.Recommend.ToString());
+                                writer.WriteElementString("Usability", comment.Usability.ToString());
+                                writer.WriteElementString("UsabilityVotes", comment.UsabilityVotes.ToString());
+                                writer.WriteElementString("PortalName", comment.PortalName);
+                                writer.WriteEndElement();
 
+                            }
+                            writer.WriteEndElement();
                         }
-                        writer.WriteEndElement();
-                        //  serializer.Serialize(writer, query);
                     }
                 }
             }
