@@ -35,11 +35,25 @@ namespace UekHD
                 }
                 productsDb.ItemsSource = comments.ToList();
             }
+            using (DatabaseContext siContext = new DatabaseContext())
+            {
+                var query = (from Product in siContext.Product
+                             select Product.Comments).ToList();
+                List<CommentDb> comments = new List<CommentDb>();
 
-        }
-
-        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+                foreach (var comment in query)
+                {
+                    if (comment.Count > 0)
+                    {
+                        foreach (var com in comment)
+                        {
+                            com.Comment = Regex.Replace(com.Comment, @"<[^>]+>|&nbsp;", "").Trim();
+                            comments.Add(com);
+                        }
+                    }
+                }
+                commentData.ItemsSource = comments.ToList();
+            }
             
         }
 
@@ -64,6 +78,43 @@ namespace UekHD
                 }
                 commentData.ItemsSource = comments.ToList();
             }
+        }
+
+        private void productSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            using (DatabaseContext siContext = new DatabaseContext())
+            {
+                if (productsDb.SelectedItem is Product)
+                {
+               
+                var item = (Product)productsDb.SelectedItem;
+                   var getProduct = from Product in siContext.Product where Product.Model.Equals(item.Model) select Product.Comments;
+                    List<CommentDb> comments = new List<CommentDb>();
+
+                    foreach (var comment in getProduct)
+                    {
+                        if (comment.Count > 0)
+                        {
+                            foreach (var com in comment)
+                            {
+                                com.Comment = Regex.Replace(com.Comment, @"<[^>]+>|&nbsp;", "").Trim();
+                                comments.Add(com);
+                            }
+                        }
+                    }
+                    commentData.ItemsSource = comments.ToList();
+                }
+                else
+                {
+                    commentData.ItemsSource = new List<Product>();
+                
+                }
+            }
+        }
+
+        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
