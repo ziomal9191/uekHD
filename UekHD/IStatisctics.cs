@@ -10,6 +10,8 @@ namespace UekHD
     {
          void addDowlodedPage(string url);
          List<string> getDowloadedPages();
-
+         void addAddedComment(string comment);
+         int getNewCommentCount();
+        string getSummary();
     }
 }

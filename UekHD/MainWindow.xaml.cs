@@ -29,7 +29,10 @@ namespace UekHD
             IStatisctics statistics = new StatiscticsObject();
             HttpCommentGeter httpGeter = new HttpCommentGeter(textToGetComments,
                                                               statistics);
-            httpGeter.loadProductToDataBase();
+            httpGeter.loadProductToDataBase(statistics);
+
+            MessageBoxResult result = MessageBox.Show( statistics.getSummary(),"Statistics", MessageBoxButton.OK, MessageBoxImage.Information);
+               
         }
 
         private void buttonClearDb(object sender, RoutedEventArgs e)
@@ -55,7 +58,7 @@ namespace UekHD
 
                 wasExtract = true;
                 string textToGetComments = TextBox.GetLineText(0);
-                IStatisctics statistics = new StatiscticsObject();
+                statistics = new StatiscticsObject();
                 httpGeter = new HttpCommentGeter(textToGetComments,
                                                               statistics);
                 
@@ -89,7 +92,7 @@ namespace UekHD
             {
                 wasExtract = false;
                 wasTransform = false;
-                httpGeter.loadProductToDataBase();
+                httpGeter.loadProductToDataBase(statistics);
                // wasLoad = flase;
             }
             else
@@ -100,7 +103,7 @@ namespace UekHD
             
         }
 
-
+     
         private void buttonSaveToFile(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
@@ -148,5 +151,6 @@ namespace UekHD
             }
         }
         private HttpCommentGeter httpGeter;
+        IStatisctics statistics = new StatiscticsObject();
     }
 }
