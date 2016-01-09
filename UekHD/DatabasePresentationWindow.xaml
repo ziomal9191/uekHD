@@ -48,6 +48,7 @@
                 <DataGridTextColumn Header="Usability" Binding="{Binding Path=Usability}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Usability Votes" Binding="{Binding Path=UsabilityVotes}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Portal" Binding="{Binding Path=PortalName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Load time" Binding="{Binding Path=LoadDate}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="productsDb" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top" Height="95" Margin="0,40,0,0" SelectionChanged="productSelectionChanged" HorizontalAlignment="Left" Width="941" AutoGenerateColumns="False" SelectionMode ="Single">

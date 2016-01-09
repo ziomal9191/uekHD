@@ -43,6 +43,8 @@ namespace UekHD
                     {
                         foreach (Product productInDb in productsInDb)
                         {
+                            DateTime time = DateTime.Now;
+
                             foreach (CommentDb dowloadedProd in product.Comments)
                             {
                                 bool contains = productInDb.Comments.Any(x => {
@@ -65,19 +67,34 @@ namespace UekHD
                                 if (contains) { }
                                 else
                                 {
+                                    dowloadedProd.LoadDate = time;
                                     statistic.addAddedComment(dowloadedProd.Comment);
+
                                     productInDb.Comments.Add(dowloadedProd);
                                 }
                             }
                         }
                         if (productsInDb.Count() == 0)
                         {
+                            DateTime time = DateTime.Now;
+                            foreach (CommentDb com in product.Comments)
+                            {
+                                com.LoadDate = time;
+                                statistic.addAddedComment(com.Comment);
+                            }
+
                             db.Product.Add(product);
                         }
 
                     }
                     else
                     {
+                        DateTime time = DateTime.Now;
+                        foreach (CommentDb com in product.Comments)
+                        {
+                                com.LoadDate = time;
+                                statistic.addAddedComment(com.Comment);
+                        }
                         db.Product.Add(product);
                     }
                     db.SaveChanges();

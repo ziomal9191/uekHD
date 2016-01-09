@@ -61,6 +61,7 @@ namespace UekHD
                 statistics = new StatiscticsObject();
                 httpGeter = new HttpCommentGeter(textToGetComments,
                                                               statistics);
+                 MessageBoxResult result = MessageBox.Show("Data was exctracted", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
                 
             }
             else
@@ -78,6 +79,7 @@ namespace UekHD
             if (!wasTransform && wasLoad && wasExtract)
             {
                 wasTransform = true;
+                 MessageBoxResult result = MessageBox.Show("Data was transformed", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
@@ -93,7 +95,9 @@ namespace UekHD
                 wasExtract = false;
                 wasTransform = false;
                 httpGeter.loadProductToDataBase(statistics);
-               // wasLoad = flase;
+                MessageBoxResult result = MessageBox.Show( "Data was loaded.\n" + statistics.getSummary(),"Statistics", MessageBoxButton.OK, MessageBoxImage.Information);
+ 
+     //           MessageBoxResult result = MessageBox.Show("Data was loaded", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {

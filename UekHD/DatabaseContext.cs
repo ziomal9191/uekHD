@@ -34,6 +34,7 @@ namespace UekHD
         public int Usability { set; get; }
         public int UsabilityVotes { set; get; }
         public string PortalName { set; get; }
+        public DateTime LoadDate { set; get; }
     }
     public class DatabaseContext : DbContext
     {
