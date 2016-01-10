@@ -4,8 +4,16 @@ using System.Linq;
 
 namespace UekHD
 {
+    /// <summary>
+    /// Klasa parsuje komentarze dla danego produktu
+    /// </summary>
     internal class SkapiecCommentParser : ICommentParser
     {
+        /// <summary>
+        /// Metoda pobiera komentarze z pageContent do product
+        /// </summary>
+        /// <param name="pageContent"></param>
+        /// <param name="product"></param>
         public void getCommentsContentFromPage(string pageContent, Product product)
         {
 
@@ -26,12 +34,20 @@ namespace UekHD
                 }
             }
         }
-
+        /// <summary>
+        /// Metoda dla danego produktu pobiera informacje o produkcie
+        /// </summary>
+        /// <param name="product"></param>
         private void fillProductInfo(Product product)
         {
             fillComments(product);
         }
 
+        /// <summary>
+        /// Wypełnia pojedyńczy komentarz comment z danego node
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillComment(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
             fillCommentContent(comment, node);
@@ -44,6 +60,12 @@ namespace UekHD
             fillUsability(comment, node);
         }
 
+        /// <summary>
+        /// Pobiera dane z node i sprawdza czy product się nie powtarza
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private bool isCommentExistInProduct(Product product, HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//div[@class=\"opinion-container\"]//p");
@@ -68,6 +90,11 @@ namespace UekHD
             return false;
         }
 
+        /// <summary>
+        /// Pobiera z node do comment użyteczność komentarza
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillUsability(CommentDb comment, HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//span[@class=\"btn gray link\"]");
@@ -109,6 +136,11 @@ namespace UekHD
 
         }
 
+        /// <summary>
+        /// Uzupełnia czy dany komentarz rekomenduje
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillRecommend(CommentDb comment, HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//em[@class=\"product-recommended\"]");
@@ -128,7 +160,11 @@ namespace UekHD
 
             }
         }
-
+        /// <summary>
+        /// Uzupełnia czas wystawienia komentarza
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillCommentDate(CommentDb comment, HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath+"span[@class=\"date\"]");
@@ -141,7 +177,11 @@ namespace UekHD
                 }
             }
         }
-
+        /// <summary>
+        /// Uzupełnia pole autor
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillAuthor(CommentDb comment, HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath+"span[@class=\"author\"]");//div//span[@class=\"review-time\"]//time");
@@ -153,7 +193,11 @@ namespace UekHD
                 }
             }
         }
-
+        /// <summary>
+        /// Uzupełnia tekst komentarza
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillCommentContent(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
             HtmlNodeCollection bodyNodes = node.SelectNodes(".//div[@class=\"opinion-container\"]//p");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
@@ -166,11 +210,11 @@ namespace UekHD
             }
 
         }
-        private void fillAdditionalComment(Product product)
-        {
 
-        }
-
+        /// <summary>
+        /// Wypełnienie produktu danymi o nazwie modelu i producenta
+        /// </summary>
+        /// <param name="product"></param>
         private void fillBrandAndModel(Product product)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
@@ -192,7 +236,10 @@ namespace UekHD
 
 
         }
-
+        /// <summary>
+        /// Wypełnienie produktu daną o typie
+        /// </summary>
+        /// <param name="product"></param>
         private void fillType(Product product)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dd//span[last()]//span");
@@ -205,7 +252,11 @@ namespace UekHD
             }
 
         }
-
+        /// <summary>
+        /// Uzupełnienie komentarza danymi wad
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillDisadvantages(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath + "ul[@class=\"pros-n-cons\"]//li[2]");
@@ -218,7 +269,11 @@ namespace UekHD
 
             }
         }
-
+        /// <summary>
+        /// Uzupełnienie komentarza danymi zalet
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillAdvantages(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(containerPath + "ul[@class=\"pros-n-cons\"]//li[1]");
@@ -230,7 +285,11 @@ namespace UekHD
                 }
             }
         }
-
+        /// <summary>
+        /// Uzupełnienie komentarza danymi ilości gwiazdek 
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="node"></param>
         private void fillStar(CommentDb comment, HtmlAgilityPack.HtmlNode node)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = node.SelectNodes(".//span[@class=\"review-score-count\"]");//("//*[@id=\"body\"]/div[2]/div/div/div[2]/div[3]/div[2]/ol/li/div/div[1]/p");// //body//div[@id='body']class=\"product - review - body\"");
@@ -245,7 +304,10 @@ namespace UekHD
 
             }
         }
-
+        /// <summary>
+        /// Uzupełnienie komentarza danymi komentarza
+        /// </summary>
+        /// <param name="product"></param>
         void fillComments(Product product)
         {
             HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//ul[@class=\"opinion-list\"]/li");

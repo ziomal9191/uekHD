@@ -6,12 +6,23 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
+    /// <summary>
+    /// Klasa dostarcza linki do komentarzy z serwisu ceneo.pl
+    /// </summary>
     class CeneoLinkProvider : ILinkProvider
     {
+        /// <summary>
+        /// konstruktor przyjmujący link początkowy
+        /// </summary>
+        /// <param name="pageLink"></param>
         public CeneoLinkProvider(string pageLink)
         {
             m_pageLink = pageLink;
         }
+        /// <summary>
+        /// Zwraca kolejne linki
+        /// </summary>
+        /// <returns></returns>
         public string getLink()
         {
             if (!wasFirstPage)
@@ -21,6 +32,10 @@ namespace UekHD
             }
             return commentPagesLinkProvider();
         }
+        /// <summary>
+        /// Parsuje i pobiera linki kolejnych stron komentarzy
+        /// </summary>
+        /// <returns></returns>
         private string commentPagesLinkProvider()
         {
             System.Net.WebClient client = new System.Net.WebClient();

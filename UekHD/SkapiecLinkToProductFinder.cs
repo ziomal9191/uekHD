@@ -8,54 +8,16 @@ using System.Net;
 
 namespace UekHD
 {
-     static class WebUtils
-    {
-        public static Encoding GetEncodingFrom(
-            System.Collections.Specialized.NameValueCollection responseHeaders,
-            Encoding defaultEncoding = null)
-        {
-            if (responseHeaders == null)
-                throw new ArgumentNullException("responseHeaders");
-
-            //Note that key lookup is case-insensitive
-            var contentType = responseHeaders["Content-Type"];
-            if (contentType == null)
-                return defaultEncoding;
-
-            var contentTypeParts = contentType.Split(';');
-            if (contentTypeParts.Length <= 1)
-                return defaultEncoding;
-
-            var charsetPart =
-                contentTypeParts.Skip(1).FirstOrDefault(
-                    p => p.TrimStart().StartsWith("charset", StringComparison.InvariantCultureIgnoreCase));
-            if (charsetPart == null)
-                return defaultEncoding;
-
-            var charsetPartParts = charsetPart.Split('=');
-            if (charsetPartParts.Length != 2)
-                return defaultEncoding;
-
-            var charsetName = charsetPartParts[1].Trim();
-            if (charsetName == "")
-                return defaultEncoding;
-
-            try
-            {
-                return Encoding.GetEncoding(charsetName);
-            }
-            catch (ArgumentException ex)
-            {
-                //throw new UnknownEncodingException(
-                //   charsetName,
-                //   "The server returned data in an unknown encoding: " + charsetName,
-                //   ex);
-                return null;
-            }
-        }
-    }
+    /// <summary>
+    /// klasa znajduje za pomocą metody Levenshtein link do produktu na stronie skapiec.pl na podstawie nazw produktu
+    /// </summary>
     class SkapiecLinkToProductFinder : ILinkToProductFinder
     {
+        /// <summary>
+        /// Pobiera link do produktu ze strony skapiec.pl na podstawie danych model i producent
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         public string getLinkToProduct(Product product)
         {
             string productName = product.Brand +" "+ product.Model;

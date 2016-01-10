@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace UekHD
 {
+    /// <summary>
+    /// Klasa tworząca statystyki wykonanych operacji
+    /// </summary>
     class StatiscticsObject : IStatisctics
     {
         public StatiscticsObject() { }
+        /// <summary>
+        /// dodaje odwiedzoną stronę do statystyk
+        /// </summary>
+        /// <param name="url"></param>
         public void addDowlodedPage(string url)
         {
             urlAddresses.Add(url);
@@ -17,26 +24,25 @@ namespace UekHD
         {
             return urlAddresses;
         }
-        public void addCommentSizeRecord(int productCommentSize)
-        {
-            this.productCommentSize = productCommentSize;
-        }
+        /// <summary>
+        /// Dodanie komentarza
+        /// </summary>
+        /// <param name="comment"></param>
         public void addAddedComment(string comment)
         {
             newComments.Add(comment);
         }
+        /// <summary>
+        /// Ilość nowo dodanych komentarzy do db
+        /// </summary>
+        /// <returns></returns>
         public int getNewCommentCount()
         { return newComments.Count; }
-        string toString()
-        {
-            string statistics = "Checked url";
-            foreach (string url in urlAddresses)
-            {
-                statistics += url + "\n";
-            }
-            statistics += "New comment number : " + newComments.Count.ToString();
-            return statistics;
-        }
+
+        /// <summary>
+        /// Tworzy String podsumowujący statystyki
+        /// </summary>
+        /// <returns></returns>
         public string getSummary()
         {
             string statistics = "Checked url: \n";

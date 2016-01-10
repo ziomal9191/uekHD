@@ -8,24 +8,77 @@ namespace UekHD
 
     class HttpCommentGeter
     {
+        /// <summary>
+        /// Pobieranie kontentów strony komentarzy dla danego produkru z serwisów ceneo.pl i skapice.pl
+        /// </summary>
         public HttpCommentGeter(string productId, IStatisctics statistic)
         {
             product = new Product();
-            m_webCrawler = new CeneoWebCrawler("http://www.ceneo.pl/" + productId + "#tab=reviews");
-            product = m_webCrawler.getCommentList( statistic, product);
+            string pageName = "http://www.ceneo.pl/" + productId + "#tab=reviews";
+            fillProductPropertis(product, pageName);
+            m_webCrawlerCeneo = new CeneoWebCrawler(pageName);
+            m_webCrawlerCeneo.getPagesContent( statistic, product);
             ILinkToProductFinder productFinder = new SkapiecLinkToProductFinder();
             string foundProduct = productFinder.getLinkToProduct(product);
             if (foundProduct != null)
             {
-                m_webCrawler = new SkapiecWebCrawler("http://www.skapiec.pl" + productFinder.getLinkToProduct(product) + "#opinie");
-                product = m_webCrawler.getCommentList(statistic, product);
+                m_webCrawlerSkapiec = new SkapiecWebCrawler("http://www.skapiec.pl" + productFinder.getLinkToProduct(product) + "#opinie");
+                m_webCrawlerSkapiec.getPagesContent(statistic, product);
             }
 
         }
+        /// <summary>
+        /// Tłumaczenie nazwy id na nazwę produktu
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="pageName"></param>
+        private void fillProductPropertis(Product product, string pageName )
+        {
+            System.Net.WebClient client = new System.Net.WebClient();
+            client.Encoding = Encoding.UTF8;
+            string pageContent = client.DownloadString(pageName);
+            htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            htmlDoc.LoadHtml(pageContent);
+            if (htmlDoc.ParseErrors != null && htmlDoc.ParseErrors.Count() > 0)
+            {
+                throw new System.ExecutionEngineException();
+                // Handle any parse errors as required
+            }
+            else
+            {
+                if (htmlDoc.DocumentNode != null)
+                {
+                    fillBrandAndModel(product);
+                    fillType(product);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Wypełnienie poszczególnych struktu danymi z pobranych stron przy pomocy parsowania html
+        /// </summary>
+        /// <param name="statistic"></param>
+        public void translateProduct(IStatisctics statistic)
+        {
+            m_webCrawlerCeneo.fillProduct(product);
+            m_webCrawlerSkapiec.fillProduct(product);
+        }
+
+
+        /// <summary>
+        /// Wypełnianie bazy danych danymi uzyskanymi z procesu Transform
+        /// </summary>
+        /// <param name="statistic"></param>
         public void loadProductToDataBase(IStatisctics statistic)
         {
             addProductToDatabase(product, statistic);
         }
+
+        /// <summary>
+        /// Funcja dodająca proddukt do bd, wraz ze sprawdzaniem czy dany komentarz dla danego produktu istnieje
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="statistic"></param>
         private void addProductToDatabase(Product product, IStatisctics statistic)
         {
             try
@@ -119,8 +172,50 @@ namespace UekHD
 
 
         }
- 
-        IWebCrawler m_webCrawler;
+        /// <summary>
+        /// Pobiera model i producenta z wpisanego id produktu
+        /// </summary>
+        /// <param name="product"></param>
+        private void fillBrandAndModel(Product product)
+        {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dl//strong");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
+                {
+                    string[] brand = nodeType.InnerHtml.Split(' ');
+                    product.Brand = brand[0];
+                    //get model
+                    string model = "";
+                    for (int i = 1; i < brand.Length; i++)
+                    {
+                        model += brand[i] + " ";
+                    }
+                    product.Model = model;
+                }
+            }
+
+
+        }
+        /// <summary>
+        /// Pobiera typ z wpisanego id produktu
+        /// </summary>
+        /// <param name="product"></param>
+        private void fillType(Product product)
+        {
+            HtmlAgilityPack.HtmlNodeCollection bodyNodes = htmlDoc.DocumentNode.SelectNodes("//nav[@class=\"breadcrumbs\"]//dd//span[last()]//span");
+            if (bodyNodes != null)
+            {
+                foreach (HtmlAgilityPack.HtmlNode nodeType in bodyNodes)
+                {
+                    product.Type = nodeType.InnerText;
+                }
+            }
+
+        }
+        HtmlAgilityPack.HtmlDocument htmlDoc;
+        IWebCrawler m_webCrawlerCeneo;
+        IWebCrawler m_webCrawlerSkapiec;
         private Product product;
     }
 }
